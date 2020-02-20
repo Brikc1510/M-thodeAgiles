@@ -8,48 +8,79 @@ package Visualisation;
 import connection.DB_Connection;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
+import java.awt.event.WindowEvent;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.time.LocalDate;
 import java.util.ArrayList;
-import javax.swing.DefaultListModel;
-import javax.swing.JLabel;
-import javax.swing.ListModel;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 
 public class VisualisationOperations extends javax.swing.JFrame {
 
-    public static String[] GetStringArray(ArrayList<String> arr) 
-    { 
-  
-        // declaration and initialise String Array 
-        String str[] = new String[arr.size()]; 
-  
-        // ArrayList to Array Conversion 
-        for (int j = 0; j < arr.size(); j++) { 
-  
-            // Assign each value to String array 
-            str[j] = arr.get(j); 
-        } 
-  
-        return str; 
-    } 
+    Connection connexion;
+    int selectedIndex;
     
     public VisualisationOperations() {
         initComponents();
+        
+        connexion = DB_Connection.get_connection();
+        selectedIndex = -1;
         populateValue();
+        setupListener();
     }
     
     private void populateValue()
     {
-        Connection connexion = DB_Connection.get_connection();
-        populateCategorie(connexion);
-        populateTableauxDonnees(connexion);
+        populateCategorie();
+        populateTableauxDonnees();
     }
     
-    private void populateCategorie(Connection connexion)
+    private void setupListener()
+    {        
+        ListSelectionListener lsl = (ListSelectionEvent e) -> {
+            int index = ((javax.swing.JList<String>)e.getSource()).getSelectedIndex();
+            setSelectionListe(index);
+        };
+        
+        ActionListener al = new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                selectedIndex = -1;
+                populateTableauxDonnees();
+            }
+        };
+        
+        this.listeCategorie.addListSelectionListener(lsl);
+        this.listeDate.addListSelectionListener(lsl);
+        this.listeLibelle.addListSelectionListener(lsl);
+        this.listeMontant.addListSelectionListener(lsl);
+        
+        this.btnFermer.addActionListener((ActionEvent e) -> {
+            closeFrame();
+        });
+        
+        this.cbDepense.addActionListener(al);
+        this.cbRecette.addActionListener(al);
+        this.listeDeroulanteCategorie.addActionListener(al);
+    }
+    
+    private void closeFrame()
+    {
+        this.dispatchEvent(new WindowEvent(this, WindowEvent.WINDOW_CLOSING)); // Lancel a fermeture de la frame
+    }
+    
+    private void setSelectionListe(int index)
+    {
+        this.listeCategorie.setSelectedIndex(index);
+        this.listeDate.setSelectedIndex(index);
+        this.listeLibelle.setSelectedIndex(index);
+        this.listeMontant.setSelectedIndex(index);
+    }
+    
+    private void populateCategorie()
     {
         Statement stmt = null;
         String query = "SELECT * FROM categorie";
@@ -68,53 +99,96 @@ public class VisualisationOperations extends javax.swing.JFrame {
         {}
     }
     
-    private void populateTableauxDonnees(Connection connexion)
+    private void populateTableauxDonnees()
     {
-        Statement stmt = null;
+        String query = constructQuery();
         
+        if(!query.equals(""))
+        {
+            try (Statement stmt = connexion.createStatement()) {
+                ResultSet rs = stmt.executeQuery(query);
+
+                ArrayList<String> listDataDate = new ArrayList<>();
+                ArrayList<String> listDataLibelle = new ArrayList<>();
+                ArrayList<String> listDataMontant = new ArrayList<>();
+                ArrayList<String> listDataCategorie = new ArrayList<>();
+                while(rs.next())
+                {
+                    LocalDate localDate = rs.getDate("date").toLocalDate();
+                    String date = String.format("%02d", localDate.getDayOfMonth()) + "/" + String.format("%02d", localDate.getMonthValue()) + "/" + String.valueOf(localDate.getYear());
+                    
+                    listDataDate.add(date);
+                    listDataMontant.add(String.valueOf(rs.getDouble("montant")));
+                    listDataLibelle.add(rs.getString("libelle"));
+                    listDataCategorie.add(rs.getString("categorie.libelle"));
+                }
+                this.listeDate.setListData(GetStringArray(listDataDate));
+                this.listeMontant.setListData(GetStringArray(listDataMontant));
+                this.listeLibelle.setListData(GetStringArray(listDataLibelle));
+                this.listeCategorie.setListData(GetStringArray(listDataCategorie));
+            }
+            catch(SQLException e)
+            {}
+        }
+        else
+        {
+            String[] value = new String[0];
+            this.listeDate.setListData(value);
+            this.listeMontant.setListData(value);
+            this.listeLibelle.setListData(value);
+            this.listeCategorie.setListData(value);
+        }
+    }
+    
+    public static String[] GetStringArray(ArrayList<String> arr) 
+    {
+        String str[] = new String[arr.size()]; 
+        for (int j = 0; j < arr.size(); j++) {
+            str[j] = arr.get(j); 
+        } 
+        return str; 
+    } 
+
+    private String constructQuery()
+    {
+        // Query de base qui selectionne tout
         String query = "SELECT * FROM `operation` INNER JOIN categorie ON idCa=idC";
         
+        // Choisi quel type dépense / recette voir:
         if(!this.listeDeroulanteCategorie.getSelectedItem().toString().equals("Tout"))
         {
-            query += " WHERE categorie.libelle='" + (String)this.listeDeroulanteCategorie.getSelectedItem() +"'";
-            System.out.println("Youpi");
+            query += " WHERE (categorie.libelle='" + (String)this.listeDeroulanteCategorie.getSelectedItem() +"'";
+        }
+        else
+        {
+            query += " WHERE (categorie.libelle<>''"; // Pour éviter d'avoir des if imbriqué horrible
         }
         
-        try
+        // Verifie si on veut les dépense ou les recettes
+        if(this.cbDepense.isSelected() && !this.cbRecette.isSelected())
         {
-            stmt = connexion.createStatement();
-            ResultSet rs = stmt.executeQuery(query);
-            
-            
-            ArrayList<String> listDataDate = new ArrayList<>();
-            ArrayList<String> listDataLibelle = new ArrayList<>();
-            ArrayList<String> listDataMontant = new ArrayList<>();
-            ArrayList<String> listDataCategorie = new ArrayList<>();
-            while(rs.next())
-            {
-                listDataDate.add(String.valueOf(rs.getDate("date")));
-                listDataMontant.add(String.valueOf(rs.getDouble("montant")));
-                listDataLibelle.add(rs.getString("libelle"));
-                listDataCategorie.add(rs.getString("categorie.libelle"));
-            }
-            this.listeDate.setListData(GetStringArray(listDataDate));
-            this.listeMontant.setListData(GetStringArray(listDataMontant));
-            this.listeLibelle.setListData(GetStringArray(listDataLibelle));
-            this.listeCategorie.setListData(GetStringArray(listDataCategorie));
-            stmt.close();
+            query += " AND montant>=0.0";
         }
-        catch(SQLException e)
-        {}
+        else if(!this.cbDepense.isSelected() && this.cbRecette.isSelected())
+        {
+            query += " AND montant<=0.0";
+        }
+        // Dans le cas ou le type d'opération n'a pas été choisi, on retourne une chaine vide
+        else if(!this.cbDepense.isSelected() && !this.cbRecette.isSelected())
+        {
+            return "";
+        }
+        
+        query += ") ORDER BY date DESC";
+        return query;
     }
-
+    
    // @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
         jLabel2 = new javax.swing.JLabel();
         listeDeroulanteCategorie = new javax.swing.JComboBox<>();
-        rbDepense = new javax.swing.JRadioButton();
-        rbRecette = new javax.swing.JRadioButton();
         jLabel1 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
@@ -129,26 +203,13 @@ public class VisualisationOperations extends javax.swing.JFrame {
         jScrollPane4 = new javax.swing.JScrollPane();
         listeLibelle = new javax.swing.JList<>();
         btnFermer = new javax.swing.JButton();
+        cbDepense = new javax.swing.JCheckBox();
+        cbRecette = new javax.swing.JCheckBox();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setResizable(false);
 
         jLabel2.setText("Catégorie");
-
-        rbDepense.setText("Dépense");
-        rbDepense.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                rbDepenseActionPerformed(evt);
-            }
-        });
-
-        rbRecette.setSelected(true);
-        rbRecette.setText("Recette");
-        rbRecette.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                rbRecetteActionPerformed(evt);
-            }
-        });
 
         jLabel1.setText("Type d'opérations");
 
@@ -169,6 +230,22 @@ public class VisualisationOperations extends javax.swing.JFrame {
         jScrollPane4.setViewportView(listeLibelle);
 
         btnFermer.setText("Fermer");
+
+        cbDepense.setSelected(true);
+        cbDepense.setText("Dépense");
+        cbDepense.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cbDepenseActionPerformed(evt);
+            }
+        });
+
+        cbRecette.setSelected(true);
+        cbRecette.setText("Recette");
+        cbRecette.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cbRecetteActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -202,16 +279,16 @@ public class VisualisationOperations extends javax.swing.JFrame {
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 250, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addGroup(layout.createSequentialGroup()
-                                .addComponent(jLabel5)
-                                .addGap(256, 256, 256)
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                    .addComponent(jLabel1)
                                     .addGroup(layout.createSequentialGroup()
-                                        .addComponent(jLabel1)
-                                        .addGap(14, 14, 14)
-                                        .addComponent(rbDepense)
-                                        .addGap(18, 18, 18)
-                                        .addComponent(rbRecette))
-                                    .addComponent(jLabel6))))))
+                                        .addComponent(jLabel5)
+                                        .addGap(256, 256, 256)
+                                        .addComponent(jLabel6)))
+                                .addGap(18, 18, 18)
+                                .addComponent(cbDepense)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(cbRecette)))))
                 .addGap(33, 33, 33))
         );
         layout.setVerticalGroup(
@@ -221,9 +298,9 @@ public class VisualisationOperations extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel2)
                     .addComponent(listeDeroulanteCategorie, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(rbDepense)
-                    .addComponent(rbRecette)
-                    .addComponent(jLabel1))
+                    .addComponent(jLabel1)
+                    .addComponent(cbDepense)
+                    .addComponent(cbRecette))
                 .addGap(47, 47, 47)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel3)
@@ -244,19 +321,13 @@ public class VisualisationOperations extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void rbDepenseActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_rbDepenseActionPerformed
-        if(this.rbRecette.isSelected())
-        {
-            this.rbRecette.setSelected(false);
-        }
-    }//GEN-LAST:event_rbDepenseActionPerformed
+    private void cbDepenseActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbDepenseActionPerformed
+        populateTableauxDonnees();
+    }//GEN-LAST:event_cbDepenseActionPerformed
 
-    private void rbRecetteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_rbRecetteActionPerformed
-        if(this.rbDepense.isSelected())
-        {
-            this.rbDepense.setSelected(false);
-        }
-    }//GEN-LAST:event_rbRecetteActionPerformed
+    private void cbRecetteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbRecetteActionPerformed
+        populateTableauxDonnees();
+    }//GEN-LAST:event_cbRecetteActionPerformed
 
     /**
      * @param args the command line arguments
@@ -286,16 +357,16 @@ public class VisualisationOperations extends javax.swing.JFrame {
         //</editor-fold>
 
         /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new VisualisationOperations().setVisible(true);
-            }
+        java.awt.EventQueue.invokeLater(() -> {
+            new VisualisationOperations().setVisible(true);
         });
         
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnFermer;
+    private javax.swing.JCheckBox cbDepense;
+    private javax.swing.JCheckBox cbRecette;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
@@ -311,7 +382,5 @@ public class VisualisationOperations extends javax.swing.JFrame {
     private javax.swing.JComboBox<String> listeDeroulanteCategorie;
     private javax.swing.JList<String> listeLibelle;
     private javax.swing.JList<String> listeMontant;
-    private javax.swing.JRadioButton rbDepense;
-    private javax.swing.JRadioButton rbRecette;
     // End of variables declaration//GEN-END:variables
 }
