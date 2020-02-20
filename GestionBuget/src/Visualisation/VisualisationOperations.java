@@ -10,11 +10,14 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowEvent;
 import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
@@ -22,12 +25,14 @@ public class VisualisationOperations extends javax.swing.JFrame {
 
     Connection connexion;
     int selectedIndex;
+    ArrayList<Integer> idArray;
     
     public VisualisationOperations() {
-        initComponents();
-        
         connexion = DB_Connection.get_connection();
         selectedIndex = -1;
+        idArray = new ArrayList<>();
+        
+        initComponents();
         populateValue();
         setupListener();
     }
@@ -42,29 +47,33 @@ public class VisualisationOperations extends javax.swing.JFrame {
     {        
         ListSelectionListener lsl = (ListSelectionEvent e) -> {
             int index = ((javax.swing.JList<String>)e.getSource()).getSelectedIndex();
+            selectedIndex = index;
             setSelectionListe(index);
         };
         
-        ActionListener al = new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                selectedIndex = -1;
-                populateTableauxDonnees();
-            }
+        ActionListener al = (ActionEvent e) -> {
+            selectedIndex = -1;
+            
+            populateTableauxDonnees();
         };
         
         this.listeCategorie.addListSelectionListener(lsl);
         this.listeDate.addListSelectionListener(lsl);
         this.listeLibelle.addListSelectionListener(lsl);
         this.listeMontant.addListSelectionListener(lsl);
+         
+        this.cbDepense.addActionListener(al);
+        this.cbRecette.addActionListener(al);
+        this.listeDeroulanteCategorie.addActionListener(al);
         
         this.btnFermer.addActionListener((ActionEvent e) -> {
             closeFrame();
         });
         
-        this.cbDepense.addActionListener(al);
-        this.cbRecette.addActionListener(al);
-        this.listeDeroulanteCategorie.addActionListener(al);
+        this.btnSupprimer.addActionListener((ActionEvent e) -> {
+             deleteSelectedRecord();
+             populateTableauxDonnees();
+        });
     }
     
     private void closeFrame()
@@ -102,7 +111,7 @@ public class VisualisationOperations extends javax.swing.JFrame {
     private void populateTableauxDonnees()
     {
         String query = constructQuery();
-        
+        idArray.clear();
         if(!query.equals(""))
         {
             try (Statement stmt = connexion.createStatement()) {
@@ -114,6 +123,7 @@ public class VisualisationOperations extends javax.swing.JFrame {
                 ArrayList<String> listDataCategorie = new ArrayList<>();
                 while(rs.next())
                 {
+                    idArray.add(rs.getInt("id"));
                     LocalDate localDate = rs.getDate("date").toLocalDate();
                     String date = String.format("%02d", localDate.getDayOfMonth()) + "/" + String.format("%02d", localDate.getMonthValue()) + "/" + String.valueOf(localDate.getYear());
                     
@@ -138,6 +148,19 @@ public class VisualisationOperations extends javax.swing.JFrame {
             this.listeLibelle.setListData(value);
             this.listeCategorie.setListData(value);
         }
+    }
+    
+    private void deleteSelectedRecord()
+    {
+        try 
+        {
+            PreparedStatement pstmt = connexion.prepareStatement("DELETE FROM operation WHERE id=?");
+            pstmt.setInt(1, idArray.get(selectedIndex));
+            pstmt.execute();
+        } 
+        catch (SQLException ex) 
+        {}
+        
     }
     
     public static String[] GetStringArray(ArrayList<String> arr) 
@@ -205,6 +228,7 @@ public class VisualisationOperations extends javax.swing.JFrame {
         btnFermer = new javax.swing.JButton();
         cbDepense = new javax.swing.JCheckBox();
         cbRecette = new javax.swing.JCheckBox();
+        btnSupprimer = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setResizable(false);
@@ -233,29 +257,23 @@ public class VisualisationOperations extends javax.swing.JFrame {
 
         cbDepense.setSelected(true);
         cbDepense.setText("Dépense");
-        cbDepense.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                cbDepenseActionPerformed(evt);
-            }
-        });
 
         cbRecette.setSelected(true);
         cbRecette.setText("Recette");
-        cbRecette.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                cbRecetteActionPerformed(evt);
-            }
-        });
+
+        btnSupprimer.setText("Supprimer selection");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addGap(25, 25, 25)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(btnSupprimer, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(btnFermer, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(0, 0, Short.MAX_VALUE)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(layout.createSequentialGroup()
                                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 95, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -313,21 +331,15 @@ public class VisualisationOperations extends javax.swing.JFrame {
                     .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 422, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 422, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 422, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(18, 18, 18)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(btnSupprimer)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(btnFermer)
-                .addContainerGap(26, Short.MAX_VALUE))
+                .addContainerGap())
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
-
-    private void cbDepenseActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbDepenseActionPerformed
-        populateTableauxDonnees();
-    }//GEN-LAST:event_cbDepenseActionPerformed
-
-    private void cbRecetteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbRecetteActionPerformed
-        populateTableauxDonnees();
-    }//GEN-LAST:event_cbRecetteActionPerformed
 
     /**
      * @param args the command line arguments
@@ -365,6 +377,7 @@ public class VisualisationOperations extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnFermer;
+    private javax.swing.JButton btnSupprimer;
     private javax.swing.JCheckBox cbDepense;
     private javax.swing.JCheckBox cbRecette;
     private javax.swing.JLabel jLabel1;
