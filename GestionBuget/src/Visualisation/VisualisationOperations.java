@@ -6,6 +6,10 @@
 package Visualisation;
 
 import connection.DB_Connection;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -67,7 +71,15 @@ public class VisualisationOperations extends javax.swing.JFrame {
     private void populateTableauxDonnees(Connection connexion)
     {
         Statement stmt = null;
+        
         String query = "SELECT * FROM `operation` INNER JOIN categorie ON idCa=idC";
+        
+        if(!this.listeDeroulanteCategorie.getSelectedItem().toString().equals("Tout"))
+        {
+            query += " WHERE categorie.libelle='" + (String)this.listeDeroulanteCategorie.getSelectedItem() +"'";
+            System.out.println("Youpi");
+        }
+        
         try
         {
             stmt = connexion.createStatement();
