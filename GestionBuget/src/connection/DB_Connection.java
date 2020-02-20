@@ -11,12 +11,6 @@ import java.sql.DriverManager;
 public class DB_Connection {
 	
 	Connection connection=null;
-
-	public static void main(String[] args) {
-		DB_Connection obj_DB_Connection=new DB_Connection();
-        System.out.println(obj_DB_Connection.get_connection());
-	}
-
 	public Connection get_connection() {
 		
 		Connection connection=null;

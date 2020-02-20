@@ -5,7 +5,13 @@
  */
 package com.modele;
 
-import java.util.Date;
+import connection.DB_Connection;
+import java.sql.Connection;
+import java.sql.Date;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 
 /**
  *
@@ -17,26 +23,27 @@ public class Operation {
     private double montant;	
     private String type;
     private String recurrence;
-    private Categorie categorie;
+    private int idCat;
 
-    public Operation(String libelle, Date date, double montant, String type, String recurrence, Categorie categorie) {
+    DB_Connection obj_DB_Connection=new DB_Connection();
+    Connection connection=obj_DB_Connection.get_connection();
+    
+    public Operation(String libelle, Date date, double montant, String type, String recurrence, int idCat) {
         this.libelle = libelle;
         this.date = date;
         this.montant = montant;
         this.type = type;
         this.recurrence = recurrence;
-        this.categorie = categorie;
+        this.idCat=idCat;
     }
 
-    public Categorie getCategorie() {
-        return categorie;
+    public int idCat() {
+        return idCat;
     }
 
-    public void setCategorie(Categorie categorie) {
-        this.categorie = categorie;
+    public void setidCat(int idCat) {
+        this.idCat = idCat;
     }
-
-    
 
     public String getLibelle() {
         return libelle;
@@ -76,6 +83,27 @@ public class Operation {
 
     public void setRecurrence(String recurrence) {
         this.recurrence = recurrence;
+    }
+    
+    
+    public void Ajouter_Opération()
+    {    
+        PreparedStatement prepare=null;
+        try {
+            
+            String query="insert into operation(libelle,date,montant,type,recurrence,idCa) values (?,?,?,?,?,?)";
+            prepare=(PreparedStatement)connection.prepareStatement(query);
+            prepare.setString(1, this.libelle);
+            prepare.setDate(2,  this.date);
+            prepare.setDouble(3, this.montant );
+            prepare.setString(4, this.type);
+            prepare.setString(5, this.recurrence);
+            prepare.setInt(6, this.idCat);
+            prepare.executeUpdate();		
+            }
+        catch (Exception e) {
+                System.out.println(e);
+        }	
     }
     
 }
