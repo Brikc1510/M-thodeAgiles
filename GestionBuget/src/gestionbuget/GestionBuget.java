@@ -1,6 +1,5 @@
 package gestionbuget;
 
-import AnalyseOperation.AnalyseOperation;
 import Visualisation.VisualisationOperations;
 
 public class GestionBuget {
