@@ -125,6 +125,11 @@ public class ajout_operation extends javax.swing.JFrame {
         });
 
         jButton1.setText("Annuler");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
 
         jButton2.setText("Valider");
         jButton2.addActionListener(new java.awt.event.ActionListener() {
@@ -237,20 +242,21 @@ public class ajout_operation extends javax.swing.JFrame {
     }//GEN-LAST:event_jRadioButton3ActionPerformed
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-        /*String Libelle=jTextField1.getText();
-        String Montant=jTextField2.getText();
-        String Date=jXDatePicker2.getDate().toString();
+        String Libelle=jTextField1.getText();
+        double Montant=Double.parseDouble(jTextField2.getText());
+        Date Date=(Date) jXDatePicker2.getDate();
         String Radio1=jRadioButton1.getText();
         String Radio2=jRadioButton1.getText();
         String Radio3=jRadioButton1.getText();
-        String Radio4=jRadioButton1.getText();*/
+        String Radio4=jRadioButton1.getText();
+        String LibelleCategorie=jComboBox1.getSelectedItem().toString();
         //if(Radio1.is)
-        Date Date1 = new Date(2020,02,20);
         //recuperer id categorie
-        Categorie categorie=new Categorie("nourriture");
+        Categorie categorie=new Categorie(LibelleCategorie);
         int idcat = categorie.getIdCategorie();
         Operation operation;
-        operation=new  Operation("operation4", Date1, 12255, "type1", "ponctuel", idcat);
+        //(String libelle, Date date, double montant, String type, String recurrence, int idCat)
+        operation=new  Operation(Libelle, Date, Montant, "type1", "ponctuel", idcat);
         operation.Ajouter_Opération();
         
     }//GEN-LAST:event_jButton2ActionPerformed
@@ -258,6 +264,11 @@ public class ajout_operation extends javax.swing.JFrame {
     private void jTextField1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField1ActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_jTextField1ActionPerformed
+
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        // Annuler
+       this.dispose();
+    }//GEN-LAST:event_jButton1ActionPerformed
 
     /**
      * @param args the command line arguments
@@ -292,10 +303,6 @@ public class ajout_operation extends javax.swing.JFrame {
                     System.out.println(e);
             }
         }
-    
-
-   
-  
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

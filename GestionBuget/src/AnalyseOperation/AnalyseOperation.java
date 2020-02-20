@@ -2,7 +2,6 @@ package AnalyseOperation;
 
 import javax.swing.JFrame;
 //import org.jfree.data.general.PieDataset;
-
 public class AnalyseOperation extends JFrame {
     
     

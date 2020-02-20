@@ -10,18 +10,27 @@ import java.sql.DriverManager;
 
 public class DB_Connection {
 	
-	Connection connection=null;
-	public Connection get_connection() {
+	private static Connection connection=null;
+        private static String USERNAME = "root";
+        private static String PASSWORD = "";
+        private static String URL = "jdbc:mysql://localhost/applicationagile";
+        
+        public DB_Connection()
+        {}
+
+	public static Connection get_connection() {
 		
-		Connection connection=null;
-		try {
+		if(connection == null)
+                {
+                    try {
 			Class.forName("com.mysql.jdbc.Driver");
-			connection=DriverManager.getConnection("jdbc:mysql://localhost/applicationagile","root","");
+			connection=DriverManager.getConnection(URL, USERNAME, PASSWORD);
 			System.out.println("Connection OK");
-		}
-		catch (Exception e) {
-			System.out.println(e);
-		}
+                    }
+                    catch (Exception e) {
+                            System.out.println(e);
+                    }
+                }
 		return connection;
 	}
 }
