@@ -13,9 +13,9 @@ public class DB_Connection {
 	private static Connection connection=null;
         private static String USERNAME = "root";
         private static String PASSWORD = "";
-        private static String URL = "jdbc:mysql://localhost/applicationagile";
+        private static String URL = "jdbc:mysql://localhost/gestionbudgetdb";
         
-        public DB_Connection()
+        private DB_Connection()
         {}
 
 	public static Connection get_connection() {
