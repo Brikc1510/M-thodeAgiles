@@ -11,6 +11,9 @@ import java.sql.DriverManager;
 public class DB_Connection {
 	
 	private static Connection connection=null;
+        private static String USERNAME = "root";
+        private static String PASSWORD = "";
+        private static String URL = "jdbc:mysql://localhost/gestionbudgetdb";
         
         private DB_Connection()
         {}
@@ -21,7 +24,7 @@ public class DB_Connection {
                 {
                     try {
 			Class.forName("com.mysql.jdbc.Driver");
-			connection=DriverManager.getConnection("jdbc:mysql://localhost/applicationagile","root","");
+			connection=DriverManager.getConnection(URL, USERNAME, PASSWORD);
 			System.out.println("Connection OK");
                     }
                     catch (Exception e) {
