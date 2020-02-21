@@ -5,17 +5,27 @@
  */
 package com.Importation_données;
 
+import com.modele.Operation;
+import connection.GestionOperation;
+import java.io.IOException;
+import java.sql.SQLException;
+import java.text.ParseException;
+import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JFileChooser;
 
 /**
  *
  * @author poo
  */
+
 public class importation_donnee_interface extends javax.swing.JFrame {
 
     /**
      * Creates new form importation_donnee_interface
      */
+    String path=null;
     public importation_donnee_interface() {
         initComponents();
     }
@@ -44,6 +54,11 @@ public class importation_donnee_interface extends javax.swing.JFrame {
         });
 
         jButton2.setText("commencer importation");
+        jButton2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton2ActionPerformed(evt);
+            }
+        });
 
         jTextField1.setText("jTextField1");
         jTextField1.addActionListener(new java.awt.event.ActionListener() {
@@ -97,8 +112,27 @@ public class importation_donnee_interface extends javax.swing.JFrame {
         // TODO add your handling code here:
         JFileChooser jf = new JFileChooser();
         jf.showOpenDialog(null);
+        path= jf.getSelectedFile().getAbsolutePath();
         jTextField1.setText(jf.getSelectedFile().getAbsolutePath().toString());
     }//GEN-LAST:event_jButton1ActionPerformed
+
+    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+        ImportationDonnees m = new ImportationDonnees();
+        List<Operation> operations = null;
+        try {
+            operations = m.importer(path);
+        } catch (ParseException ex) {
+            Logger.getLogger(importation_donnee_interface.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IOException ex) {
+            Logger.getLogger(importation_donnee_interface.class.getName()).log(Level.SEVERE, null, ex);
+        }
+         GestionOperation g = new GestionOperation();
+        try {
+            g.setOperation(operations);
+        } catch (SQLException ex) {
+            Logger.getLogger(importation_donnee_interface.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }//GEN-LAST:event_jButton2ActionPerformed
 
     /**
      * @param args the command line arguments
