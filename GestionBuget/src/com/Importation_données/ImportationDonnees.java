@@ -58,10 +58,7 @@ public class ImportationDonnees {
             }
 
             Date date = dateFormat.parse(dateO);
-            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
             
-            String currentTime = sdf.format(date);
-            System.out.println(currentTime);
 
             Operation op = new Operation(libelle, date, montant, type, null, new Categorie(categorie));
             operations.add(op);

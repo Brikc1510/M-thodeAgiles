@@ -9,26 +9,23 @@ import java.io.IOException;
 import java.text.ParseException;
 import java.util.List;
 import Visualisation.VisualisationOperations;
+import connection.GestionOperation;
+import java.sql.SQLException;
 
 
 public class GestionBuget {
 
-    public static void main(String[] args) throws IOException, FileNotFoundException, ParseException 
+    public static void main(String[] args) throws IOException, FileNotFoundException, ParseException, SQLException 
     {
 
-        AnalyseOperation ao = new AnalyseOperation(null);
+        //AnalyseOperation ao = new AnalyseOperation(null);
         ImportationDonnees m = new ImportationDonnees();
         List<Operation> operations = m.importer();
-         for (Operation oneData : operations) {
-             System.out.println(oneData.getDate());
-              System.out.println(oneData.getLibelle());
-               System.out.println(oneData.getMontant());
-                System.out.println(oneData.getType());
+         GestionOperation g = new GestionOperation();
+         g.setOperation(operations);
          
-         }
-         
-         VisualisationOperations vo = new VisualisationOperations();
-        vo.show(true);  
+//         VisualisationOperations vo = new VisualisationOperations();
+//       vo.show(true);  
          
          }
         
