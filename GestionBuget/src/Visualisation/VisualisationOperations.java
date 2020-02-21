@@ -190,11 +190,11 @@ public class VisualisationOperations extends javax.swing.JFrame {
         // Verifie si on veut les dépense ou les recettes
         if(this.cbDepense.isSelected() && !this.cbRecette.isSelected())
         {
-            query += " AND montant>=0.0";
+            query += " AND montant<=0.0";
         }
         else if(!this.cbDepense.isSelected() && this.cbRecette.isSelected())
         {
-            query += " AND montant<=0.0";
+            query += " AND montant>0.0";
         }
         // Dans le cas ou le type d'opération n'a pas été choisi, on retourne une chaine vide
         else if(!this.cbDepense.isSelected() && !this.cbRecette.isSelected())

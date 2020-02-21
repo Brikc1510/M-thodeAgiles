@@ -25,7 +25,7 @@ import java.util.List;
  */
 public class ImportationDonnees {
 
-    private final static String RESOURCES_PATH = "C://Users/Ahmed/Documents/GitHub/M-thodeAgiles/GestionBuget/src/";
+    private final static String RESOURCES_PATH = "D://M-thodeAgiles/GestionBuget/src/";
     private final static String ELEVES_FILE_NAME = "operation.csv";
     private final static char SEPARATOR = ';';
    
