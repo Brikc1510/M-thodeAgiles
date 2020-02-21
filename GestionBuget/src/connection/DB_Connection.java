@@ -18,7 +18,9 @@ public class DB_Connection {
         private DB_Connection()
         {}
 
+
 	public static Connection get_connection() {
+
 		
 		if(connection == null)
                 {
