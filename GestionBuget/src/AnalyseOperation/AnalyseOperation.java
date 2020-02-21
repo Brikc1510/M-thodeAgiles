@@ -28,13 +28,13 @@ public class AnalyseOperation {
      * @param args the command line arguments
      */
     public static void main(String[] args) throws SQLException, IOException {
-        String url = "jdbc:mysql://localhost:3306/agiles";
+        String url = "jdbc:mysql://localhost:3306/gestionbudgetdb";
         String user = "root";
         String password = "";
         try (Connection con = DriverManager.getConnection(url, user, password)) {
 
             dataset = new JDBCCategoryDataset(con);
-            dataset.executeQuery("SELECT country, medals FROM GoldMedalsLondon");
+            dataset.executeQuery("SELECT idCa, montant FROM operation");
         }
         
         JFreeChart barChart = ChartFactory.createBarChart(
