@@ -19,14 +19,16 @@ public class GestionBuget {
     {
 
         //AnalyseOperation ao = new AnalyseOperation(null);
-        ImportationDonnees m = new ImportationDonnees();
+        /*ImportationDonnees m = new ImportationDonnees();
         List<Operation> operations = m.importer();
          GestionOperation g = new GestionOperation();
          g.setOperation(operations);
          
 //         VisualisationOperations vo = new VisualisationOperations();
-//       vo.show(true);  
+//       vo.show(true);*/  
          
+        ajout_operation ao = new ajout_operation();
+        ao.show();
          }
         
     }

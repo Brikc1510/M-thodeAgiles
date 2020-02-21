@@ -5,6 +5,15 @@
  */
 package gestionbuget;
 
+import com.modele.Categorie;
+import com.modele.Operation;
+import connection.DB_Connection;
+import connection.GestionOperation;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.util.Date;
+
 
 
 /**
@@ -18,9 +27,30 @@ public class ajout_operation extends javax.swing.JFrame {
      */
     public ajout_operation() {
         initComponents();
-        
+        Remplir_Combobox_Categorie();
        
     }
+    public void Remplir_Combobox_Categorie()
+    {
+        Connection con = DB_Connection.get_connection();
+        PreparedStatement prepare=null;
+        try {
+
+                String query="select libelle from categorie";
+                prepare=(PreparedStatement)con.prepareStatement(query);
+                ResultSet result =prepare.executeQuery();
+                while(result.next())
+                {
+
+                        jComboBox1.addItem(result.getString("libelle"));
+                }
+
+            }
+        catch (Exception e) {
+                System.out.println(e);
+        }
+    }
+
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -102,7 +132,6 @@ public class ajout_operation extends javax.swing.JFrame {
             }
         });
 
-        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
         jComboBox1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jComboBox1ActionPerformed(evt);
@@ -137,19 +166,20 @@ public class ajout_operation extends javax.swing.JFrame {
                             .addComponent(jLabel6)
                             .addComponent(jLabel7))
                         .addGap(49, 49, 49)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addGroup(layout.createSequentialGroup()
                                 .addComponent(jRadioButton1)
                                 .addGap(18, 18, 18)
                                 .addComponent(jRadioButton2))
-                            .addGroup(layout.createSequentialGroup()
+                            .addComponent(jTextField1, javax.swing.GroupLayout.DEFAULT_SIZE, 194, Short.MAX_VALUE)
+                            .addComponent(jComboBox1, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                                .addGap(0, 0, Short.MAX_VALUE)
                                 .addComponent(jRadioButton3)
                                 .addGap(18, 18, 18)
                                 .addComponent(jRadioButton4))
-                            .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 194, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, 115, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jXDatePicker1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                            .addComponent(jTextField2)
+                            .addComponent(jXDatePicker1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                     .addGroup(layout.createSequentialGroup()
                         .addGap(194, 194, 194)
                         .addComponent(jButton1)
@@ -227,7 +257,37 @@ public class ajout_operation extends javax.swing.JFrame {
     }//GEN-LAST:event_jRadioButton3ActionPerformed
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-        // TODO add your handling code here:
+        String Libelle=jTextField1.getText();
+        double Montant=Double.parseDouble(jTextField2.getText());
+        String Type=null;
+        String Reccurence=null;
+        Date date=(Date) jXDatePicker1.getDate(); //jj / mm / aaaa
+        //System.out.println(Date.toLocaleString);
+        java.sql.Date d = new java.sql.Date(date.getYear(), date.getMonth(), date.getDate());
+        System.out.println(d);
+        
+        // aaaa-mm-jj
+        
+        if(jRadioButton1.isSelected())
+            Type=jRadioButton1.getText();
+        
+        if(jRadioButton2.isSelected())
+            Type=jRadioButton2.getText();
+        
+        if(jRadioButton3.isSelected())
+            Reccurence=jRadioButton3.getText();
+        
+        if(jRadioButton4.isSelected())
+            Reccurence=jRadioButton4.getText();
+
+        String LibelleCategorie=jComboBox1.getSelectedItem().toString();
+
+        //recuperer categorie
+        Categorie categorie=new Categorie(LibelleCategorie);
+        categorie.setId();
+        
+        GestionOperation gestionoperation=new GestionOperation();
+        gestionoperation.Ajouter_Opération(Libelle, d, Montant, Type, Reccurence, categorie);
         
     }//GEN-LAST:event_jButton2ActionPerformed
 
