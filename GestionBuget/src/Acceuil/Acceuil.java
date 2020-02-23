@@ -5,17 +5,21 @@
  */
 package Acceuil;
 
+import AnalyseOperation.AnalyseOperation;
 import Visualisation.VisualisationOperations;
 import static Visualisation.VisualisationOperations.GetStringArray;
+import com.Importation_données.ImportationDonnees;
 import connection.DB_Connection;
 import gestionbuget.ajout_operation;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowEvent;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.text.ParseException;
 import java.time.LocalDate;
 import java.util.ArrayList;
 
@@ -42,6 +46,10 @@ public class Acceuil extends javax.swing.JFrame {
            return null;
        }
     }
+     private void closeFrame()
+    {
+        this.dispatchEvent(new WindowEvent(this, WindowEvent.WINDOW_CLOSING)); // Lancel a fermeture de la frame
+    }
     public Acceuil() {
        
         initComponents();
@@ -62,22 +70,22 @@ public class Acceuil extends javax.swing.JFrame {
            jButton2.addActionListener(new ActionListener() {
               @Override
               public void actionPerformed(ActionEvent arg0) {
-                   ajout_operation firstframe=new ajout_operation();
-                   firstframe.setVisible(true);
+                  AnalyseOperation fifthframe=new AnalyseOperation();
+                  
               }
           });
             jButton4.addActionListener(new ActionListener() {
               @Override
               public void actionPerformed(ActionEvent arg0) {
-                   ajout_operation firstframe=new ajout_operation();
-                   firstframe.setVisible(true);
+                   ImportationDonnees thirdframe=new ImportationDonnees();
               }
           });
              jButton5.addActionListener(new ActionListener() {
               @Override
               public void actionPerformed(ActionEvent arg0) {
-                   ajout_operation firstframe=new ajout_operation();
-                   firstframe.setVisible(true);
+                    
+            closeFrame();
+       
               }
           });
         
