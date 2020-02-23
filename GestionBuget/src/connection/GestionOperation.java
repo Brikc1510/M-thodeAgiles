@@ -5,12 +5,16 @@
  */
 package connection;
 
+import com.modele.Categorie;
 import com.modele.Operation;
 import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -54,5 +58,26 @@ public class GestionOperation {
            
 
         }
+    }
+    
+        public void Ajouter_Opération(String Libelle, java.sql.Date Date,double Montant, String Type,String Reccurence,Categorie categorie)
+    {    
+        Connection con = DB_Connection.get_connection();
+        PreparedStatement prepare=null;
+        try {
+            
+            String query="insert into operation(libelle,date,montant,type,recurrence,idCa) values (?,?,?,?,?,?)";
+            prepare=(PreparedStatement)con.prepareStatement(query);
+            prepare.setString(1, Libelle);
+            prepare.setDate(2, (java.sql.Date) Date);
+            prepare.setDouble(3, Montant);
+            prepare.setString(4, Type);
+            prepare.setString(5, Reccurence);
+            prepare.setInt(6, categorie.getidC());
+            prepare.executeUpdate();		
+            }
+        catch (Exception e) {
+                System.out.println(e);
+        }	
     }
 }

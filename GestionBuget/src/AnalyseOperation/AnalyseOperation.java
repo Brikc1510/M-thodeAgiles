@@ -45,7 +45,7 @@ public class AnalyseOperation {
                 PlotOrientation.VERTICAL,
                 false, true, false);
 
-        ChartUtils.saveChartAsPNG(new File("medals.png"), barChart, 450, 400);
+        ChartUtils.saveChartAsPNG(new File("depenses.png"), barChart, 450, 400);
     }
     
 }
