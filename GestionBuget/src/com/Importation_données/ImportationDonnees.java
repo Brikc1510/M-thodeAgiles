@@ -30,10 +30,10 @@ public class ImportationDonnees {
     private final static char SEPARATOR = ';';
    
 
-    public List<Operation> importer(String path) throws ParseException, IOException {
+    public List<Operation> importer() throws ParseException, IOException {
 
         List<Operation> operations = new ArrayList<>();
-        Path orderPath = Paths.get(path);
+        Path orderPath = Paths.get(RESOURCES_PATH + ELEVES_FILE_NAME);
         List<String> lines = null; //null mean no value by default
         try {
             lines = Files.readAllLines(orderPath);
