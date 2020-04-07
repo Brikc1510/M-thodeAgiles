@@ -5,6 +5,9 @@
  */
 package gestionbuget;
 
+import connection.DB_Connection;
+import java.sql.Connection;
+
 
 
 /**
@@ -51,7 +54,7 @@ public class ajout_operation extends javax.swing.JFrame {
 
         jLabel8.setText("jLabel8");
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
         jLabel1.setText("ajouter une operation");
 

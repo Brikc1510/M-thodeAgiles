@@ -24,13 +24,13 @@ import javax.swing.event.ListSelectionListener;
 
 public class VisualisationOperations extends javax.swing.JFrame {
 
-    Connection connexion;
+    private Connection connexion;
     int selectedIndex;
     ArrayList<Integer> idArray;
     
     public VisualisationOperations() {
-        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         connexion = DB_Connection.get_connection();
+        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         selectedIndex = -1;
         idArray = new ArrayList<>();
         
