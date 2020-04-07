@@ -31,21 +31,6 @@ public class Acceuil extends javax.swing.JFrame {
      static com.mysql.jdbc.Connection cnx;
      static Statement st;
      static ResultSet rst;
-    public static com.mysql.jdbc.Connection ConnecterDB(){
-       try{
-          Class.forName("com.mysql.jdbc.Driver");
-          System.out.println("Driver ok");
-          String url="jdbc:mysql://localhost:3306/gestionbudgetdb";
-          String user="root";
-          String password="";
-          com.mysql.jdbc.Connection cnx=(com.mysql.jdbc.Connection) DriverManager.getConnection(url,user,password);
-          System.out.println("connexion bien etablie");
-          return cnx;
-       }catch(Exception e){
-           e.printStackTrace();
-           return null;
-       }
-    }
      private void closeFrame()
     {
         this.dispatchEvent(new WindowEvent(this, WindowEvent.WINDOW_CLOSING)); // Lancel a fermeture de la frame
@@ -70,8 +55,9 @@ public class Acceuil extends javax.swing.JFrame {
            jButton2.addActionListener(new ActionListener() {
               @Override
               public void actionPerformed(ActionEvent arg0) {
-                  AnalyseOperation fifthframe=new AnalyseOperation();
-                  
+                    AnalyseOperation.barChart();
+                    AnalyseOperation.pieChart();
+                    AnalyseOperation.lineChart();
               }
           });
             jButton4.addActionListener(new ActionListener() {
@@ -91,7 +77,7 @@ public class Acceuil extends javax.swing.JFrame {
         
               try{
            
-           java.sql.Connection cnx=ConnecterDB(); 
+           java.sql.Connection cnx= DB_Connection.get_connection();
            st=cnx.createStatement();
            rst=st.executeQuery("SELECT * FROM operation WHERE type like 'Depense'ORDER BY date DESC LIMIT 10");
                 ArrayList<String> listDataDate = new ArrayList<>();
