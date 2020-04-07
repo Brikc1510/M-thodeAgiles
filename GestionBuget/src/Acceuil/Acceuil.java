@@ -14,12 +14,8 @@ import gestionbuget.ajout_operation;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowEvent;
-import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.sql.Statement;
-import java.text.ParseException;
 import java.time.LocalDate;
 import java.util.ArrayList;
 
@@ -28,103 +24,103 @@ import java.util.ArrayList;
  * @author smith
  */
 public class Acceuil extends javax.swing.JFrame {
-     static com.mysql.jdbc.Connection cnx;
-     static Statement st;
-     static ResultSet rst;
-     private void closeFrame()
-    {
+
+    static com.mysql.jdbc.Connection cnx;
+    static Statement st;
+    static ResultSet rst;
+
+    private void closeFrame() {
         this.dispatchEvent(new WindowEvent(this, WindowEvent.WINDOW_CLOSING)); // Lancel a fermeture de la frame
     }
-    public Acceuil() {
-       
-        initComponents();
-         jButton1.addActionListener(new ActionListener() {
-              @Override
-              public void actionPerformed(ActionEvent arg0) {
-                   ajout_operation firstframe=new ajout_operation();
-                   firstframe.setVisible(true);
-              }
-          });
-          jButton3.addActionListener(new ActionListener() {
-              @Override
-              public void actionPerformed(ActionEvent arg0) {
-                   VisualisationOperations Secondframe=new VisualisationOperations();
-                   Secondframe.setVisible(true);
-              }
-          });
-           jButton2.addActionListener(new ActionListener() {
-              @Override
-              public void actionPerformed(ActionEvent arg0) {
-                    AnalyseOperation.barChart();
-                    AnalyseOperation.pieChart();
-                    AnalyseOperation.lineChart();
-              }
-          });
-            jButton4.addActionListener(new ActionListener() {
-              @Override
-              public void actionPerformed(ActionEvent arg0) {
-                   ImportationDonnees thirdframe=new ImportationDonnees();
-              }
-          });
-             jButton5.addActionListener(new ActionListener() {
-              @Override
-              public void actionPerformed(ActionEvent arg0) {
-                    
-            closeFrame();
-       
-              }
-          });
-        
-              try{
-           
-           java.sql.Connection cnx= DB_Connection.get_connection();
-           st=cnx.createStatement();
-           rst=st.executeQuery("SELECT * FROM operation WHERE type like 'Depense'ORDER BY date DESC LIMIT 10");
-                ArrayList<String> listDataDate = new ArrayList<>();
-                ArrayList<String> listDataLibelle = new ArrayList<>();
-                ArrayList<String> listDataMontant = new ArrayList<>();
-                ArrayList<String> listDataDate2 = new ArrayList<>();
-                ArrayList<String> listDataLibelle2 = new ArrayList<>();
-                ArrayList<String> listDataMontant2 = new ArrayList<>();
-                ArrayList<String> listSolde = new ArrayList<>();
-                while(rst.next())
-                {
-                    
-                    LocalDate localDate = rst.getDate("date").toLocalDate();
-                    String date = String.format("%02d", localDate.getDayOfMonth()) + "/" + String.format("%02d", localDate.getMonthValue()) + "/" + String.valueOf(localDate.getYear());
-                    
-                    listDataDate.add(date);
-                    listDataMontant.add(String.valueOf(rst.getDouble("montant")));
-                    listDataLibelle.add(rst.getString("libelle"));
-                 
-                }
-                this.jList1.setListData(GetStringArray(listDataDate));
-                this.jList3.setListData(GetStringArray(listDataMontant));
-                this.jList2.setListData(GetStringArray(listDataLibelle));
-                rst=st.executeQuery("SELECT * FROM operation WHERE type like 'Recettes' ORDER BY date DESC LIMIT 10");
-           while(rst.next()){
-                   LocalDate localDate = rst.getDate("date").toLocalDate();
-                    String date = String.format("%02d", localDate.getDayOfMonth()) + "/" + String.format("%02d", localDate.getMonthValue()) + "/" + String.valueOf(localDate.getYear());
-                    
-                    listDataDate2.add(date);
-                    listDataMontant2.add(String.valueOf(rst.getDouble("montant")));
-                    listDataLibelle2.add(rst.getString("libelle"));
-           }
-                this.jList4.setListData(GetStringArray(listDataDate2));
-                this.jList6.setListData(GetStringArray(listDataMontant2));
-                this.jList5.setListData(GetStringArray(listDataLibelle2));
 
-                rst=st.executeQuery("SELECT * FROM solde ORDER BY idS DESC LIMIT 1");
-                while(rst.next()){
-                  listSolde.add(String.valueOf(rst.getDouble("montant"))+" €"); 
-                }
-                  this.jList7.setListData(GetStringArray(listSolde));
-        }catch(Exception e){
-             e.printStackTrace();
-        } 
-              
+    public Acceuil() {
+        initComponents();
+        jButton1.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent arg0) {
+                ajout_operation firstframe = new ajout_operation();
+                firstframe.setVisible(true);
+            }
+        });
+        jButton3.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent arg0) {
+                VisualisationOperations Secondframe = new VisualisationOperations();
+                Secondframe.setVisible(true);
+            }
+        });
+        jButton2.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent arg0) {
+                AnalyseOperation.barChart();
+                AnalyseOperation.pieChart();
+                AnalyseOperation.lineChart();
+            }
+        });
+        jButton4.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent arg0) {
+                ImportationDonnees thirdframe = new ImportationDonnees();
+            }
+        });
+        jButton5.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent arg0) {
+
+                closeFrame();
+
+            }
+        });
+
+        try {
+
+            java.sql.Connection cnx = DB_Connection.get_connection();
+            st = cnx.createStatement();
+            rst = st.executeQuery("SELECT * FROM operation WHERE type like 'Depense'ORDER BY date DESC LIMIT 10");
+            ArrayList<String> listDataDate = new ArrayList<>();
+            ArrayList<String> listDataLibelle = new ArrayList<>();
+            ArrayList<String> listDataMontant = new ArrayList<>();
+            ArrayList<String> listDataDate2 = new ArrayList<>();
+            ArrayList<String> listDataLibelle2 = new ArrayList<>();
+            ArrayList<String> listDataMontant2 = new ArrayList<>();
+            ArrayList<String> listSolde = new ArrayList<>();
+            while (rst.next()) {
+
+                LocalDate localDate = rst.getDate("date").toLocalDate();
+                String date = String.format("%02d", localDate.getDayOfMonth()) + "/" + String.format("%02d", localDate.getMonthValue()) + "/" + String.valueOf(localDate.getYear());
+
+                listDataDate.add(date);
+                listDataMontant.add(String.valueOf(rst.getDouble("montant")));
+                listDataLibelle.add(rst.getString("libelle"));
+
+            }
+            this.jList1.setListData(GetStringArray(listDataDate));
+            this.jList3.setListData(GetStringArray(listDataMontant));
+            this.jList2.setListData(GetStringArray(listDataLibelle));
+            rst = st.executeQuery("SELECT * FROM operation WHERE type like 'Recettes' ORDER BY date DESC LIMIT 10");
+            while (rst.next()) {
+                LocalDate localDate = rst.getDate("date").toLocalDate();
+                String date = String.format("%02d", localDate.getDayOfMonth()) + "/" + String.format("%02d", localDate.getMonthValue()) + "/" + String.valueOf(localDate.getYear());
+
+                listDataDate2.add(date);
+                listDataMontant2.add(String.valueOf(rst.getDouble("montant")));
+                listDataLibelle2.add(rst.getString("libelle"));
+            }
+            this.jList4.setListData(GetStringArray(listDataDate2));
+            this.jList6.setListData(GetStringArray(listDataMontant2));
+            this.jList5.setListData(GetStringArray(listDataLibelle2));
+
+            rst = st.executeQuery("SELECT * FROM solde ORDER BY idS DESC LIMIT 1");
+            while (rst.next()) {
+                listSolde.add(String.valueOf(rst.getDouble("montant")) + " €");
+            }
+            this.jList7.setListData(GetStringArray(listSolde));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
     }
-       
+
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -337,7 +333,7 @@ public class Acceuil extends javax.swing.JFrame {
      * @param args the command line arguments
      */
     public static void main(String args[]) {
-          
+
         try {
             for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
                 if ("Nimbus".equals(info.getName())) {
@@ -355,14 +351,14 @@ public class Acceuil extends javax.swing.JFrame {
             java.util.logging.Logger.getLogger(Acceuil.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
         //</editor-fold>
-        
+
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
                 new Acceuil().setVisible(true);
             }
         });
-      
+
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -392,6 +388,5 @@ public class Acceuil extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane6;
     private javax.swing.JScrollPane jScrollPane8;
     // End of variables declaration//GEN-END:variables
- 
 
 }

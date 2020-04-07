@@ -12,6 +12,7 @@ import java.util.Date;
  * @author Ahmed
  */
 public class Solde {
+
     private Date date;
     private double montant;
 
@@ -35,5 +36,5 @@ public class Solde {
     public void setMontant(double montant) {
         this.montant = montant;
     }
-    
+
 }

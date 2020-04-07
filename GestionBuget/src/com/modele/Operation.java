@@ -12,9 +12,10 @@ import java.util.Date;
  * @author Ahmed
  */
 public class Operation {
+
     private String libelle;
-    private Date date;	
-    private double montant;	
+    private Date date;
+    private double montant;
     private String type;
     private String recurrence;
     private Categorie categorie;
@@ -35,8 +36,6 @@ public class Operation {
     public void setCategorie(Categorie categorie) {
         this.categorie = categorie;
     }
-
-    
 
     public String getLibelle() {
         return libelle;
@@ -77,5 +76,5 @@ public class Operation {
     public void setRecurrence(String recurrence) {
         this.recurrence = recurrence;
     }
-    
+
 }

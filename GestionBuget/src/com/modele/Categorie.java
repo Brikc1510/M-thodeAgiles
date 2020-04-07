@@ -10,6 +10,7 @@ package com.modele;
  * @author Ahmed
  */
 public class Categorie {
+
     private String libelle;
 
     public Categorie(String libelle) {
@@ -23,6 +24,5 @@ public class Categorie {
     public void setLibelle(String libelle) {
         this.libelle = libelle;
     }
-    
-    
+
 }

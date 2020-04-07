@@ -29,15 +29,14 @@ public class GestionOperation {
             Statement statement = con.createStatement();
             /* Exécution d'une requête de lecture */
             System.out.println(op.getCategorie().getLibelle());
-            ResultSet resultat = statement.executeQuery("SELECT idC FROM categorie WHERE libelle='"+op.getCategorie().getLibelle()+"';");
+            ResultSet resultat = statement.executeQuery("SELECT idC FROM categorie WHERE libelle='" + op.getCategorie().getLibelle() + "';");
             resultat.last();
             System.out.println(resultat.getRow());
-            if(resultat.getRow() < 1)
-            {
+            if (resultat.getRow() < 1) {
                 System.out.println("hola");
                 statement.executeUpdate("INSERT INTO categorie (libelle) VALUES"
                         + " ('" + op.getCategorie().getLibelle() + "');");
-                resultat = statement.executeQuery("SELECT idC FROM categorie WHERE libelle='"+op.getCategorie().getLibelle()+"';");
+                resultat = statement.executeQuery("SELECT idC FROM categorie WHERE libelle='" + op.getCategorie().getLibelle() + "';");
             }
             int id = 0;
             resultat.beforeFirst();
@@ -51,7 +50,6 @@ public class GestionOperation {
 
             int statut = statement.executeUpdate("INSERT INTO operation (libelle,date,montant,type,recurrence,idCa) VALUES"
                     + " ('" + op.getLibelle() + "','" + time + "','" + op.getMontant() + "','" + op.getType() + "','" + op.getRecurrence() + "','" + id + "');");
-           
 
         }
     }

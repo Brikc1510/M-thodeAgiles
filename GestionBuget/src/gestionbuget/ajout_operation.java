@@ -8,8 +8,6 @@ package gestionbuget;
 import connection.DB_Connection;
 import java.sql.Connection;
 
-
-
 /**
  *
  * @author poo
@@ -21,8 +19,7 @@ public class ajout_operation extends javax.swing.JFrame {
      */
     public ajout_operation() {
         initComponents();
-        
-       
+
     }
 
     /**
@@ -198,21 +195,23 @@ public class ajout_operation extends javax.swing.JFrame {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
-    
+
     private void jTextField2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField2ActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_jTextField2ActionPerformed
 
     private void jRadioButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jRadioButton1ActionPerformed
         // TODO add your handling code here:
-        if(jRadioButton1.isSelected())
+        if (jRadioButton1.isSelected()) {
             jRadioButton2.setSelected(false);
+        }
     }//GEN-LAST:event_jRadioButton1ActionPerformed
 
     private void jRadioButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jRadioButton2ActionPerformed
         // TODO add your handling code here:
-        if(jRadioButton2.isSelected())
+        if (jRadioButton2.isSelected()) {
             jRadioButton1.setSelected(false);
+        }
     }//GEN-LAST:event_jRadioButton2ActionPerformed
 
     private void jComboBox1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBox1ActionPerformed
@@ -221,27 +220,28 @@ public class ajout_operation extends javax.swing.JFrame {
 
     private void jRadioButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jRadioButton3ActionPerformed
         // TODO add your handling code here:
-        if(jRadioButton3.isSelected())
-            jRadioButton4.setSelected(false); 
+        if (jRadioButton3.isSelected()) {
+            jRadioButton4.setSelected(false);
+        }
     }//GEN-LAST:event_jRadioButton3ActionPerformed
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
         // TODO add your handling code here:
-        
+
     }//GEN-LAST:event_jButton2ActionPerformed
 
     private void jRadioButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jRadioButton4ActionPerformed
         // TODO add your handling code here:
-        if(jRadioButton4.isSelected())
+        if (jRadioButton4.isSelected()) {
             jRadioButton3.setSelected(false);
+        }
     }//GEN-LAST:event_jRadioButton4ActionPerformed
 
     /**
      * @param args the command line arguments
      */
-    
     public static void main(String args[]) {
-        
+
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
                 new ajout_operation().setVisible(true);
@@ -249,9 +249,6 @@ public class ajout_operation extends javax.swing.JFrame {
         });
 
     }
-
-   
-  
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

@@ -27,95 +27,85 @@ public class VisualisationOperations extends javax.swing.JFrame {
     private Connection connexion;
     int selectedIndex;
     ArrayList<Integer> idArray;
-    
+
     public VisualisationOperations() {
         connexion = DB_Connection.get_connection();
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         selectedIndex = -1;
         idArray = new ArrayList<>();
-        
+
         initComponents();
         populateValue();
         setupListener();
     }
-    
-    private void populateValue()
-    {
+
+    private void populateValue() {
         populateCategorie();
         populateTableauxDonnees();
     }
-    
-    private void setupListener()
-    {        
+
+    private void setupListener() {
         ListSelectionListener lsl = (ListSelectionEvent e) -> {
-            int index = ((javax.swing.JList<String>)e.getSource()).getSelectedIndex();
+            int index = ((javax.swing.JList<String>) e.getSource()).getSelectedIndex();
             selectedIndex = index;
             setSelectionListe(index);
         };
-        
+
         ActionListener al = (ActionEvent e) -> {
             selectedIndex = -1;
-            
+
             populateTableauxDonnees();
         };
-        
+
         this.listeCategorie.addListSelectionListener(lsl);
         this.listeDate.addListSelectionListener(lsl);
         this.listeLibelle.addListSelectionListener(lsl);
         this.listeMontant.addListSelectionListener(lsl);
-         
+
         this.cbDepense.addActionListener(al);
         this.cbRecette.addActionListener(al);
         this.listeDeroulanteCategorie.addActionListener(al);
-        
+
         this.btnFermer.addActionListener((ActionEvent e) -> {
             closeFrame();
         });
-        
+
         this.btnSupprimer.addActionListener((ActionEvent e) -> {
-             deleteSelectedRecord();
-             populateTableauxDonnees();
+            deleteSelectedRecord();
+            populateTableauxDonnees();
         });
     }
-    
-    private void closeFrame()
-    {
+
+    private void closeFrame() {
         dispose();
     }
-    
-    private void setSelectionListe(int index)
-    {
+
+    private void setSelectionListe(int index) {
         this.listeCategorie.setSelectedIndex(index);
         this.listeDate.setSelectedIndex(index);
         this.listeLibelle.setSelectedIndex(index);
         this.listeMontant.setSelectedIndex(index);
     }
-    
-    private void populateCategorie()
-    {
+
+    private void populateCategorie() {
         Statement stmt = null;
         String query = "SELECT * FROM categorie";
-        try
-        {
+        try {
             stmt = connexion.createStatement();
             ResultSet rs = stmt.executeQuery(query);
             this.listeDeroulanteCategorie.addItem("Tout");
-            while(rs.next())
-            {
+            while (rs.next()) {
                 this.listeDeroulanteCategorie.addItem(rs.getString("libelle"));
             }
             stmt.close();
+        } catch (SQLException e) {
         }
-        catch(SQLException e)
-        {}
     }
-    
-    private void populateTableauxDonnees()
-    {
+
+    private void populateTableauxDonnees() {
         String query = constructQuery();
         idArray.clear();
-        if(!query.equals(""))
-        {
+        if (!query.equals("")) {
             try (Statement stmt = connexion.createStatement()) {
                 ResultSet rs = stmt.executeQuery(query);
 
@@ -123,12 +113,11 @@ public class VisualisationOperations extends javax.swing.JFrame {
                 ArrayList<String> listDataLibelle = new ArrayList<>();
                 ArrayList<String> listDataMontant = new ArrayList<>();
                 ArrayList<String> listDataCategorie = new ArrayList<>();
-                while(rs.next())
-                {
+                while (rs.next()) {
                     idArray.add(rs.getInt("id"));
                     LocalDate localDate = rs.getDate("date").toLocalDate();
                     String date = String.format("%02d", localDate.getDayOfMonth()) + "/" + String.format("%02d", localDate.getMonthValue()) + "/" + String.valueOf(localDate.getYear());
-                    
+
                     listDataDate.add(date);
                     listDataMontant.add(String.valueOf(rs.getDouble("montant")));
                     listDataLibelle.add(rs.getString("libelle"));
@@ -138,12 +127,9 @@ public class VisualisationOperations extends javax.swing.JFrame {
                 this.listeMontant.setListData(GetStringArray(listDataMontant));
                 this.listeLibelle.setListData(GetStringArray(listDataLibelle));
                 this.listeCategorie.setListData(GetStringArray(listDataCategorie));
+            } catch (SQLException e) {
             }
-            catch(SQLException e)
-            {}
-        }
-        else
-        {
+        } else {
             String[] value = new String[0];
             this.listeDate.setListData(value);
             this.listeMontant.setListData(value);
@@ -151,64 +137,51 @@ public class VisualisationOperations extends javax.swing.JFrame {
             this.listeCategorie.setListData(value);
         }
     }
-    
-    private void deleteSelectedRecord()
-    {
-        try 
-        {
+
+    private void deleteSelectedRecord() {
+        try {
             PreparedStatement pstmt = connexion.prepareStatement("DELETE FROM operation WHERE id=?");
             pstmt.setInt(1, idArray.get(selectedIndex));
             pstmt.execute();
-        } 
-        catch (SQLException ex) 
-        {}
-        
-    }
-    
-    public static String[] GetStringArray(ArrayList<String> arr) 
-    {
-        String str[] = new String[arr.size()]; 
-        for (int j = 0; j < arr.size(); j++) {
-            str[j] = arr.get(j); 
-        } 
-        return str; 
-    } 
+        } catch (SQLException ex) {
+        }
 
-    private String constructQuery()
-    {
+    }
+
+    public static String[] GetStringArray(ArrayList<String> arr) {
+        String str[] = new String[arr.size()];
+        for (int j = 0; j < arr.size(); j++) {
+            str[j] = arr.get(j);
+        }
+        return str;
+    }
+
+    private String constructQuery() {
         // Query de base qui selectionne tout
         String query = "SELECT * FROM `operation` INNER JOIN categorie ON idCa=idC";
-        
+
         // Choisi quel type dépense / recette voir:
-        if(!this.listeDeroulanteCategorie.getSelectedItem().toString().equals("Tout"))
-        {
-            query += " WHERE (categorie.libelle='" + (String)this.listeDeroulanteCategorie.getSelectedItem() +"'";
-        }
-        else
-        {
+        if (!this.listeDeroulanteCategorie.getSelectedItem().toString().equals("Tout")) {
+            query += " WHERE (categorie.libelle='" + (String) this.listeDeroulanteCategorie.getSelectedItem() + "'";
+        } else {
             query += " WHERE (categorie.libelle<>''"; // Pour éviter d'avoir des if imbriqué horrible
         }
-        
+
         // Verifie si on veut les dépense ou les recettes
-        if(this.cbDepense.isSelected() && !this.cbRecette.isSelected())
-        {
+        if (this.cbDepense.isSelected() && !this.cbRecette.isSelected()) {
             query += " AND montant<=0.0";
-        }
-        else if(!this.cbDepense.isSelected() && this.cbRecette.isSelected())
-        {
+        } else if (!this.cbDepense.isSelected() && this.cbRecette.isSelected()) {
             query += " AND montant>0.0";
-        }
-        // Dans le cas ou le type d'opération n'a pas été choisi, on retourne une chaine vide
-        else if(!this.cbDepense.isSelected() && !this.cbRecette.isSelected())
-        {
+        } // Dans le cas ou le type d'opération n'a pas été choisi, on retourne une chaine vide
+        else if (!this.cbDepense.isSelected() && !this.cbRecette.isSelected()) {
             return "";
         }
-        
+
         query += ") ORDER BY date DESC";
         return query;
     }
-    
-   // @SuppressWarnings("unchecked")
+
+    // @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
@@ -374,7 +347,7 @@ public class VisualisationOperations extends javax.swing.JFrame {
         java.awt.EventQueue.invokeLater(() -> {
             new VisualisationOperations().setVisible(true);
         });
-        
+
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
