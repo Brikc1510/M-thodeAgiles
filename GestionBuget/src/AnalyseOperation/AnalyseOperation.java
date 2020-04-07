@@ -5,16 +5,24 @@
  */
 package AnalyseOperation;
 
+import connection.DB_Connection;
 import java.io.File;
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import org.jfree.chart.ChartFactory;
+import org.jfree.chart.ChartPanel;
+import org.jfree.chart.ChartRenderingInfo;
 import org.jfree.chart.ChartUtils;
 import org.jfree.chart.JFreeChart;
+import org.jfree.chart.entity.StandardEntityCollection;
+import org.jfree.chart.labels.StandardPieSectionLabelGenerator;
+import org.jfree.chart.plot.PiePlot;
 import org.jfree.chart.plot.PlotOrientation;
+import org.jfree.chart.ui.ApplicationFrame;
 import org.jfree.data.jdbc.JDBCCategoryDataset;
+import org.jfree.data.jdbc.JDBCPieDataset;
 
 /**
  *
@@ -22,6 +30,7 @@ import org.jfree.data.jdbc.JDBCCategoryDataset;
  */
 public class AnalyseOperation {
     
+    private static JDBCCategoryDataset dataset;
     public static void pieChart() {
 		Connection con = DB_Connection.get_connection();
 		JDBCPieDataset datasetpie = new JDBCPieDataset(con);
@@ -102,13 +111,28 @@ public class AnalyseOperation {
 		f.setVisible(true);
 	}
 
-    /**
-     * @param args the command line arguments
-     */
     public static void main(String[] args) throws SQLException, IOException {
+        String url = "jdbc:mysql://localhost:3306/gestionbudgetdb";
+        String user = "root";
+        String password = "";
+        try (Connection con = DriverManager.getConnection(url, user, password)) {
+
+            dataset = new JDBCCategoryDataset(con);
+            dataset.executeQuery("SELECT idCa, montant FROM operation");
+        }
+        
+        JFreeChart barChart = ChartFactory.createBarChart(
+                "Olympic Gold medals in London",
+                "",
+                "Gold medals",
+                dataset,
+                PlotOrientation.VERTICAL,
+                false, true, false);
+
+        ChartUtils.saveChartAsPNG(new File("medals.png"), barChart, 450, 400);
         barChart();
-		pieChart();
-		lineChart();
+	pieChart();
+	lineChart();
     }
     
 }
