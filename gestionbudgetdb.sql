@@ -1,11 +1,11 @@
 -- phpMyAdmin SQL Dump
--- version 4.9.2
+-- version 4.7.4
 -- https://www.phpmyadmin.net/
 --
--- Host: 127.0.0.1:3306
--- Generation Time: Feb 12, 2020 at 03:48 PM
--- Server version: 8.0.18
--- PHP Version: 7.3.12
+-- Hôte : 127.0.0.1:3306
+-- Généré le :  mer. 08 avr. 2020 à 01:42
+-- Version du serveur :  5.7.19
+-- Version de PHP :  5.6.31
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 SET AUTOCOMMIT = 0;
@@ -19,13 +19,13 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8mb4 */;
 
 --
--- Database: `gestionbudgetdb`
+-- Base de données :  `gestionbudgetdb`
 --
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `categorie`
+-- Structure de la table `categorie`
 --
 
 DROP TABLE IF EXISTS `categorie`;
@@ -33,12 +33,23 @@ CREATE TABLE IF NOT EXISTS `categorie` (
   `idC` int(11) NOT NULL AUTO_INCREMENT,
   `libelle` varchar(30) NOT NULL,
   PRIMARY KEY (`idC`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8;
+
+--
+-- Déchargement des données de la table `categorie`
+--
+
+INSERT INTO `categorie` (`idC`, `libelle`) VALUES
+(1, 'Nourriture'),
+(2, 'Sports'),
+(3, 'Divertissement'),
+(4, 'Loisirs'),
+(5, 'Autre');
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `operation`
+-- Structure de la table `operation`
 --
 
 DROP TABLE IF EXISTS `operation`;
@@ -52,28 +63,16 @@ CREATE TABLE IF NOT EXISTS `operation` (
   `idCa` int(11) NOT NULL,
   PRIMARY KEY (`id`),
   KEY `idCa` (`idCa`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=14 DEFAULT CHARSET=utf8;
+
 
 -- --------------------------------------------------------
-
 --
--- Table structure for table `solde`
---
-
-DROP TABLE IF EXISTS `solde`;
-CREATE TABLE IF NOT EXISTS `solde` (
-  `idS` int(11) NOT NULL AUTO_INCREMENT,
-  `date` date NOT NULL,
-  `montant` double NOT NULL,
-  PRIMARY KEY (`idS`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
---
--- Constraints for dumped tables
+-- Contraintes pour les tables déchargées
 --
 
 --
--- Constraints for table `operation`
+-- Contraintes pour la table `operation`
 --
 ALTER TABLE `operation`
   ADD CONSTRAINT `operation_ibfk_1` FOREIGN KEY (`idCa`) REFERENCES `categorie` (`idC`) ON DELETE CASCADE ON UPDATE CASCADE;
