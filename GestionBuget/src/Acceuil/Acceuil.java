@@ -9,6 +9,7 @@ import AnalyseOperation.AnalyseOperation;
 import Visualisation.VisualisationOperations;
 import static Visualisation.VisualisationOperations.GetStringArray;
 import com.Importation_données.ImportationDonnees;
+import com.Importation_données.importation_donnee_interface;
 import connection.DB_Connection;
 import gestionbuget.ajout_operation;
 import java.awt.event.ActionEvent;
@@ -60,7 +61,8 @@ public class Acceuil extends javax.swing.JFrame {
         jButton4.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent arg0) {
-                ImportationDonnees thirdframe = new ImportationDonnees();
+                importation_donnee_interface thirdframe = new importation_donnee_interface();
+                thirdframe.setVisible(true);
             }
         });
         jButton5.addActionListener(new ActionListener() {
