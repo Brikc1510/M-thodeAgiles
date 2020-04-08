@@ -113,20 +113,7 @@ public class AnalyseOperation {
         f.setVisible(true);
     }
 
-    public static void main(String[] args) throws SQLException, IOException {
-        String url = "jdbc:mysql://localhost:3306/gestionbudgetdb";
-        String user = "root";
-        String password = "";
-
-        JFreeChart barChart = ChartFactory.createBarChart(
-                "Olympic Gold medals in London",
-                "",
-                "Gold medals",
-                dataset,
-                PlotOrientation.VERTICAL,
-                false, true, false);
-
-        ChartUtils.saveChartAsPNG(new File("medals.png"), barChart, 450, 400);
+    public static void main(String[] args) throws SQLException, IOException {    
         barChart();
         pieChart();
         lineChart();
