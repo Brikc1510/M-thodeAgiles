@@ -99,7 +99,7 @@ public class Acceuil extends javax.swing.JFrame {
             this.jList1.setListData(GetStringArray(listDataDate));
             this.jList3.setListData(GetStringArray(listDataMontant));
             this.jList2.setListData(GetStringArray(listDataLibelle));
-            rst = st.executeQuery("SELECT * FROM operation WHERE type like 'Recettes' ORDER BY date DESC LIMIT 10");
+            rst = st.executeQuery("SELECT * FROM operation WHERE type like 'Recette' ORDER BY date DESC LIMIT 10");
             while (rst.next()) {
                 LocalDate localDate = rst.getDate("date").toLocalDate();
                 String date = String.format("%02d", localDate.getDayOfMonth()) + "/" + String.format("%02d", localDate.getMonthValue()) + "/" + String.valueOf(localDate.getYear());
@@ -112,10 +112,7 @@ public class Acceuil extends javax.swing.JFrame {
             this.jList6.setListData(GetStringArray(listDataMontant2));
             this.jList5.setListData(GetStringArray(listDataLibelle2));
 
-            /*rst = st.executeQuery("SELECT * FROM solde ORDER BY idS DESC LIMIT 1");
-            while (rst.next()) {
-                listSolde.add(String.valueOf(rst.getDouble("montant")) + " €");
-            }*/
+           
             rst = st.executeQuery("SELECT SUM(montant) AS m FROM operation");
             rst.next();
             jLabel7.setText(String.valueOf(rst.getDouble("m")));
@@ -159,6 +156,9 @@ public class Acceuil extends javax.swing.JFrame {
         jList6 = new javax.swing.JList<>();
         jLabel6 = new javax.swing.JLabel();
         jLabel7 = new javax.swing.JLabel();
+        jLabel8 = new javax.swing.JLabel();
+        jLabel9 = new javax.swing.JLabel();
+        jLabel10 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -233,6 +233,12 @@ public class Acceuil extends javax.swing.JFrame {
 
         jLabel7.setText("jLabel7");
 
+        jLabel8.setText("Date");
+
+        jLabel9.setText("Libelle");
+
+        jLabel10.setText("Montant");
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -259,19 +265,29 @@ public class Acceuil extends javax.swing.JFrame {
                                 .addComponent(jLabel4)
                                 .addGap(109, 109, 109)
                                 .addComponent(jLabel5)))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(layout.createSequentialGroup()
-                                .addGap(77, 77, 77)
-                                .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(18, 18, 18)
-                                .addComponent(jScrollPane5, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(18, 18, 18)
-                                .addComponent(jScrollPane6, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addGap(77, 77, 77)
+                                        .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addGap(18, 18, 18)
+                                        .addComponent(jScrollPane5, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addGap(18, 18, 18)
+                                        .addComponent(jScrollPane6, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addGap(184, 184, 184)
+                                        .addComponent(jLabel2)))
+                                .addGap(2, 2, 2))
                             .addGroup(layout.createSequentialGroup()
-                                .addGap(184, 184, 184)
-                                .addComponent(jLabel2)))
-                        .addGap(2, 2, 2))
+                                .addGap(128, 128, 128)
+                                .addComponent(jLabel8)
+                                .addGap(91, 91, 91)
+                                .addComponent(jLabel9)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(jLabel10)
+                                .addGap(77, 77, 77))))
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                             .addComponent(jButton1, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -302,7 +318,10 @@ public class Acceuil extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel3)
                     .addComponent(jLabel4)
-                    .addComponent(jLabel5))
+                    .addComponent(jLabel5)
+                    .addComponent(jLabel8)
+                    .addComponent(jLabel9)
+                    .addComponent(jLabel10))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addGroup(layout.createSequentialGroup()
@@ -367,12 +386,15 @@ public class Acceuil extends javax.swing.JFrame {
     private javax.swing.JButton jButton4;
     private javax.swing.JButton jButton5;
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
+    private javax.swing.JLabel jLabel8;
+    private javax.swing.JLabel jLabel9;
     private javax.swing.JList<String> jList1;
     private javax.swing.JList<String> jList2;
     private javax.swing.JList<String> jList3;
