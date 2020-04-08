@@ -78,7 +78,7 @@ public class Acceuil extends javax.swing.JFrame {
 
             java.sql.Connection cnx = DB_Connection.get_connection();
             st = cnx.createStatement();
-            rst = st.executeQuery("SELECT * FROM operation WHERE type like 'Depense'ORDER BY date DESC LIMIT 10");
+            rst = st.executeQuery("SELECT * FROM operation WHERE MONTH(date)=MONTH(Now())  AND type like 'Depense' ORDER BY date DESC LIMIT 10");
             ArrayList<String> listDataDate = new ArrayList<>();
             ArrayList<String> listDataLibelle = new ArrayList<>();
             ArrayList<String> listDataMontant = new ArrayList<>();
@@ -99,7 +99,7 @@ public class Acceuil extends javax.swing.JFrame {
             this.jList1.setListData(GetStringArray(listDataDate));
             this.jList3.setListData(GetStringArray(listDataMontant));
             this.jList2.setListData(GetStringArray(listDataLibelle));
-            rst = st.executeQuery("SELECT * FROM operation WHERE type like 'Recette' ORDER BY date DESC LIMIT 10");
+            rst = st.executeQuery("SELECT * FROM operation WHERE MONTH(date)=MONTH(Now())  AND type like 'Recette' ORDER BY date DESC LIMIT 10");
             while (rst.next()) {
                 LocalDate localDate = rst.getDate("date").toLocalDate();
                 String date = String.format("%02d", localDate.getDayOfMonth()) + "/" + String.format("%02d", localDate.getMonthValue()) + "/" + String.valueOf(localDate.getYear());
