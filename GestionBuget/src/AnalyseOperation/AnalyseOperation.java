@@ -53,7 +53,7 @@ public class AnalyseOperation {
 
         ChartPanel chartPanel = new ChartPanel(chart);
         chartPanel.setPreferredSize(new java.awt.Dimension(500, 270));
-        ApplicationFrame f = new ApplicationFrame("Gestion budget");
+        JFrame f = new JFrame("Gestion budget");
         f.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         f.setContentPane(chartPanel);
         f.pack();
@@ -77,9 +77,10 @@ public class AnalyseOperation {
                 datasetBar,
                 PlotOrientation.VERTICAL,
                 false, true, false);
+        
         ChartPanel chartPanel = new ChartPanel(barChart);
         chartPanel.setPreferredSize(new java.awt.Dimension(500, 270));
-        ApplicationFrame f = new ApplicationFrame("Gestion budget");
+        JFrame f = new JFrame("Gestion budget");
         f.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         f.setContentPane(chartPanel);
         f.pack();
@@ -105,7 +106,7 @@ public class AnalyseOperation {
 
         ChartPanel chartPanel = new ChartPanel(barChart);
         chartPanel.setPreferredSize(new java.awt.Dimension(500, 270));
-        ApplicationFrame f = new ApplicationFrame("Gestion budget");
+        JFrame f = new JFrame("Gestion budget");
         f.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         f.setContentPane(chartPanel);
         f.pack();
