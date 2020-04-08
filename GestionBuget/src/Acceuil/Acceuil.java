@@ -116,14 +116,9 @@ public class Acceuil extends javax.swing.JFrame {
             while (rst.next()) {
                 listSolde.add(String.valueOf(rst.getDouble("montant")) + " €");
             }*/
-            rst = st.executeQuery("SELECT * FROM operation");
-            double sum = 0.0;
-            while(rst.next())
-            {
-                sum += rst.getDouble("montant");
-            }
-            
-            jLabel7.setText(String.valueOf(sum));
+            rst = st.executeQuery("SELECT SUM(montant) AS m FROM operation");
+            rst.next();
+            jLabel7.setText(String.valueOf(rst.getDouble("m")));
             
         } catch (Exception e) {
             e.printStackTrace();
