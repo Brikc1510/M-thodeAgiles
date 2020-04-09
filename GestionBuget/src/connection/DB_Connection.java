@@ -12,7 +12,7 @@ public class DB_Connection {
 
     private static Connection connection = null;
     private static String USERNAME = "root";
-    private static String PASSWORD = "1234";
+    private static String PASSWORD = "";
     private static String URL = "jdbc:mysql://localhost/gestionbudgetdb";
 
     private DB_Connection() {

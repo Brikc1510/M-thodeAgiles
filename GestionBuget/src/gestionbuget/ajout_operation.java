@@ -272,6 +272,7 @@ public class ajout_operation extends javax.swing.JFrame {
                 pstmt.setString(5, recc);
                 pstmt.setInt(6, idCA);
                 pstmt.execute();
+                dispose();
             } catch (SQLException ex) {
                 Logger.getLogger(ajout_operation.class.getName()).log(Level.SEVERE, null, ex);
             }

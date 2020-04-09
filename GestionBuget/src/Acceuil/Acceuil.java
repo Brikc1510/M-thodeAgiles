@@ -74,8 +74,14 @@ public class Acceuil extends javax.swing.JFrame {
             }
         });
 
-        try {
+        
+        fillArrays();
+    }
 
+    
+    private void fillArrays()
+    {
+        try {
             java.sql.Connection cnx = DB_Connection.get_connection();
             st = cnx.createStatement();
             rst = st.executeQuery("SELECT * FROM operation WHERE MONTH(date)=MONTH(Now())  AND type like 'Depense' ORDER BY date DESC LIMIT 10");
@@ -120,9 +126,7 @@ public class Acceuil extends javax.swing.JFrame {
         } catch (Exception e) {
             e.printStackTrace();
         }
-
     }
-
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -161,6 +165,13 @@ public class Acceuil extends javax.swing.JFrame {
         jLabel10 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        addWindowFocusListener(new java.awt.event.WindowFocusListener() {
+            public void windowGainedFocus(java.awt.event.WindowEvent evt) {
+                formWindowGainedFocus(evt);
+            }
+            public void windowLostFocus(java.awt.event.WindowEvent evt) {
+            }
+        });
 
         jButton1.setText("Ajouter une opération");
 
@@ -346,6 +357,11 @@ public class Acceuil extends javax.swing.JFrame {
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_jButton2ActionPerformed
+
+    private void formWindowGainedFocus(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowGainedFocus
+        // TODO add your handling code here:
+        fillArrays();
+    }//GEN-LAST:event_formWindowGainedFocus
 
     /**
      * @param args the command line arguments
