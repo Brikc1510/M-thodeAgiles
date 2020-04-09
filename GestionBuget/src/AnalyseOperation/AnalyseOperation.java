@@ -37,7 +37,7 @@ public class AnalyseOperation {
         JDBCPieDataset datasetpie = new JDBCPieDataset(con);
         try {
 
-            String query = "SELECT c.libelle, o.montant FROM categorie c inner join operation o on o.idCa=c.idC";
+            String query = "SELECT c.libelle, SUM(ABS(o.montant)) FROM categorie c inner join operation o on o.idCa=c.idC where type like 'Depense' GROUP BY c.libelle";
             datasetpie.executeQuery(query);
         } catch (SQLException e) {
             // TODO Auto-generated catch block
@@ -65,7 +65,7 @@ public class AnalyseOperation {
         Connection con = DB_Connection.get_connection();
         JDBCCategoryDataset datasetBar = new JDBCCategoryDataset(con);
         try {
-            datasetBar.executeQuery("SELECT c.libelle, o.montant FROM categorie c inner join operation o on o.idCa=c.idC");
+            datasetBar.executeQuery("SELECT c.libelle, SUM(ABS(o.montant)) FROM categorie c inner join operation o on o.idCa=c.idC where type like 'Depense' GROUP BY c.libelle");
         } catch (SQLException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
@@ -91,7 +91,7 @@ public class AnalyseOperation {
         Connection con = DB_Connection.get_connection();
         JDBCCategoryDataset datasetLine = new JDBCCategoryDataset(con);
         try {
-            datasetLine.executeQuery("SELECT c.libelle, o.montant FROM categorie c inner join operation o on o.idCa=c.idC");
+            datasetLine.executeQuery("SELECT c.libelle, SUM(ABS(o.montant)) FROM categorie c inner join operation o on o.idCa=c.idC where type like 'Depense' GROUP BY c.libelle");
         } catch (SQLException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
