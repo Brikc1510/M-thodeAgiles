@@ -24,7 +24,6 @@ import java.util.List;
  * @author Ahmed
  */
 public class ImportationDonnees {
-    private final static char SEPARATOR = ';';
    
 
     public List<Operation> importer(String path) throws ParseException, IOException {
